@@ -28,6 +28,13 @@ app.get('/api/persons', (req, res) => {
     res.json(persons)
 })
 
+app.get('/info', (req, res) => {
+    let text = "puhelinluettelossa " + persons.length + " henkilön tiedot "
+    const d = new Date()
+    text = text.concat(d.toUTCString())
+    res.json(text)
+})
+
 const PORT = 3001
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
