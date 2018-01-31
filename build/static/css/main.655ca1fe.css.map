@@ -1,0 +1,1 @@
+{"version":3,"sources":["index.css"],"names":[],"mappings":"AAAA,SACE,WACA,iBACA,eACA,oBACA,YACA,kBAAoB","file":"static/css/main.655ca1fe.css","sourcesContent":[".success {\n  color: black;\n  background: green;\n  font-size: 17px;\n  border-style: hidden;\n  padding: 8px;\n  margin-bottom: 20px;\n}\n\n\n// WEBPACK FOOTER //\n// ./src/index.css"],"sourceRoot":""}
