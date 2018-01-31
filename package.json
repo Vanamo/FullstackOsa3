@@ -18,7 +18,7 @@
   "bugs": {
     "url": "https://github.com/Vanamo/FullstackOsa3/issues"
   },
-  "homepage": "https://github.com/Vanamo/FullstackOsa3/build/index.html",
+  "homepage": "https://github.com/Vanamo/FullstackOsa3/tree/master/build/index.html",
   "dependencies": {
     "cors": "^2.8.4",
     "express": "^4.16.2",
