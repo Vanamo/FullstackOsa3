@@ -1,5 +1,8 @@
 const express = require('express')
 const app = express()
+const bodyParser = require('body-parser')
+
+app.use(bodyParser.json())
 
 let persons = [
     {
@@ -28,11 +31,46 @@ app.get('/api/persons', (req, res) => {
     res.json(persons)
 })
 
+app.get('/api/persons/:id', (req, res) => {
+    const id = Number(req.params.id)
+    const person = persons.find(person => person.id === id)
+
+    if (person) {
+        res.json(person)
+    } else {
+        res.status(404).end()
+    }
+})
+
+app.delete('/api/persons/:id', (req, res) => {
+    const id = Number(req.params.id)
+    persons = persons.filter(person => person.id !== id)
+
+    res.status(204).end()
+})
+
+app.post('/api/persons', (req, res) => {
+    const person = req.body
+
+    if (person.name === undefined || person.number === undefined) {
+        return res.status(400).json({error: 'content missing'})
+    }
+    if (persons.find(p => p.name === person.name)) {
+        return res.status(400).json({error: 'name must be unique'})
+    }
+
+    person.id = Math.floor(Math.random() * 1000000)
+    console.log(person)
+
+    persons = persons.concat(person)
+
+    res.json(person)
+})
+
 app.get('/info', (req, res) => {
-    let text = "puhelinluettelossa " + persons.length + " henkilön tiedot "
-    const d = new Date()
-    text = text.concat(d.toUTCString())
-    res.json(text)
+    let text = "puhelinluettelossa " + persons.length + " henkilön tiedot \n"
+    let date = new Date()
+    res.send(text + '<br></br>' + date.toUTCString())
 })
 
 const PORT = 3001
