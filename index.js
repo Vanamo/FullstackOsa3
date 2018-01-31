@@ -2,11 +2,13 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
+const cors = require('cors')
 
 morgan.token('data', function getData (req) {
     return JSON.stringify(req.body)
 })
 
+app.use(cors())
 app.use(bodyParser.json())
 //app.use(morgan('tiny'))
 app.use(morgan(':method :url :data :status :res[content-length] - :response-time ms'))
@@ -81,7 +83,7 @@ app.get('/info', (req, res) => {
     res.send(text + '<br></br>' + date.toUTCString())
 })
 
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
