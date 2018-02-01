@@ -98,14 +98,24 @@ app.post('/api/persons', (req, res) => {
 
     console.log(person)
 
-    person
-        .save()
-        .then(savedPerson => {
-            res.status(200).json(Person.format(person))
+    Person
+        .findOne({ name: body.name })
+        .then(response => {
+            console.log("res", response)
+            if (!response) {
+                person
+                    .save()
+                    .then(savedPerson => {
+                        res.status(200).json(Person.format(person))
+                    })
+                    .catch(error => {
+                        res.status(400).send({ error: 'malformatted id' })
+                    })
+            } else {
+                res.status(400).send({error: 'name already in database'})
+            }
         })
-        .catch(error => {
-            res.status(400).send({ error: 'malformatted id' })
-        })
+
 
 })
 
@@ -117,7 +127,7 @@ app.put('/api/persons/:id', (req, res) => {
     }
     console.log("body", body)
     Person
-        .findByIdAndUpdate(req.params.id, { number: body.number }, {new: true})
+        .findByIdAndUpdate(req.params.id, { number: body.number }, { new: true })
         .then((response) => {
             res.status(200).send(response)
         })
