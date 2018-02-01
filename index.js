@@ -3,8 +3,9 @@ const app = express()
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const cors = require('cors')
+const Person = require('./models/person')
 
-morgan.token('data', function getData (req) {
+morgan.token('data', function getData(req) {
     return JSON.stringify(req.body)
 })
 
@@ -37,14 +38,34 @@ let persons = [
     }
 ]
 
+// const formatPerson = (person) => {
+//     return {
+//         name: person.name,
+//         number: person.number,
+//         id: person._id
+//     }
+// }
+
 app.get('/api/persons', (req, res) => {
-    res.json(persons)
+    Person
+        .find({})
+        .then(persons => {
+            res.json(persons.map(Person.format))
+        })
+        .catch(error => {
+            console.log(error)
+        })
 })
 
 app.get('/api/persons/:id', (req, res) => {
     const id = Number(req.params.id)
-    const person = persons.find(person => person.id === id)
+    // Person
+    //     .findById(req.params.id)
+    //     .then(person => {
+    //         res.json(formatPerson(person))
+    //     })
 
+    const person = persons.find(person => person.id === id)
     if (person) {
         res.json(person)
     } else {
@@ -60,21 +81,33 @@ app.delete('/api/persons/:id', (req, res) => {
 })
 
 app.post('/api/persons', (req, res) => {
-    const person = req.body
+    const body = req.body
 
-    if (person.name === undefined || person.number === undefined) {
-        return res.status(400).json({error: 'content missing'})
+    if (body.name === undefined || body.number === undefined) {
+        return res.status(400).json({ error: 'content missing' })
     }
-    if (persons.find(p => p.name === person.name)) {
-        return res.status(400).json({error: 'name must be unique'})
-    }
+    // if (persons.find(p => p.name === person.name)) {
+    //     return res.status(400).json({ error: 'name must be unique' })
+    // }
 
-    person.id = Math.floor(Math.random() * 1000000)
+    const person = new Person({
+        name: body.name,
+        number: body.number
+    })
+
+    // person.id = Math.floor(Math.random() * 1000000)
     console.log(person)
 
     persons = persons.concat(person)
 
-    res.json(person)
+    person
+        .save()
+        .then(savedPerson => {
+            res.json(Person.format(person))
+        })
+        .catch(error => {
+            console.log(error)
+        })
 })
 
 app.get('/info', (req, res) => {
