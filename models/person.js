@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
-const url = 'mongodb://Vanamo:database@ds119988.mlab.com:19988/puhelinluettelo'
+const url = process.env.MONGODB_URI
 
 mongoose.connect(url)
 mongoose.Promise = global.Promise
